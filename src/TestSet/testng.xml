@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="suitename" verbose="1"  configfailurepolicy="continue" time-out="10000000" skipfailedinvocationcounts="true" allow-return-values="true">
+    <parameter name="env" value="online" />
+    <parameter name="type" value="XV" />
+    <test name="XVlogin" preserve-order="true" skipfailedinvocationcounts="true" >
+        <classes>
+            <!--class name="com.fxiaoke.qa.defObjApi_lhh.lhhtest">
+                <methods>
+                    <include name="lhhTest"/>
+                </methods>
+            </class-->
+            <class name="com.learn.lhh.MyTest">
+                <methods>
+                    <include name="mytest"/>
+                    <!--include name="haha"/-->
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
