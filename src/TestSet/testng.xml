@@ -12,7 +12,7 @@
             </class-->
             <class name="com.learn.lhh.MyTest">
                 <methods>
-                    <include name="mytest"/>
+                    <include name="getAllProperties"/>
                     <!--include name="haha"/-->
                 </methods>
             </class>
