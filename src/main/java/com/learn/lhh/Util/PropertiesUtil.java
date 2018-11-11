@@ -1,4 +1,4 @@
-package com.learn.lhh;
+package com.learn.lhh.Util;
 import java.io.*;
 import java.util.*;
 
@@ -24,8 +24,8 @@ public class PropertiesUtil {
     public static String getValueByKey(String filePath, String key) {
         Properties pps = new Properties();
         try {
-            //InputStream in = new BufferedInputStream(new FileInputStream(filePath));
-            InputStream in = ClassLoader.class.getResourceAsStream(filePath);
+            InputStream in = new BufferedInputStream(new FileInputStream(filePath));
+            //InputStream in = ClassLoader.class.getResourceAsStream(filePath);
             pps.load(in);
             String value = pps.getProperty(key);
             System.out.println(key + " = " + value);
