@@ -5,16 +5,13 @@
     <parameter name="type" value="XV" />
     <test name="XVlogin" preserve-order="true" skipfailedinvocationcounts="true" >
         <classes>
-            <!--class name="com.fxiaoke.qa.defObjApi_lhh.lhhtest">
-                <methods>
-                    <include name="lhhTest"/>
-                </methods>
-            </class-->
             <class name="com.learn.lhh.MyTest">
                 <methods>
-                    <include name="testGetCellValue"/>
+                    <!--include name="testGetCellValue"/-->
                     <!--include name="haha"/-->
+                    <!--include name="readTxt"/-->
                 </methods>
+
             </class>
         </classes>
     </test>
