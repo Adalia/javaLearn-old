@@ -11,18 +11,40 @@ import com.learn.lhh.Util.ExcelUtilWithXSSF;
 import com.learn.lhh.Util.ExcelUtilWithHSSF;
 import com.learn.lhh.Util.TxtFileUtil;
 import com.learn.lhh.Common.ParseFile;
+import com.learn.lhh.Util.JsonUtilWithFastjson;
 
 public class MyTest {
-    @Test(description = "测试将txt按行放入arrayList")
-    public void readTxt(){
-        String file = "/data/transferConfig.txt";
+
+
+    //2018-11-16_174505.json
+    @Test(description = "测试将txt按行放入arrayList",groups = "test")
+
+    public void getFromJson(){
+        String file = "/data/2018-11-16_174505.json";
         //ArrayList fileArray = TxtFileUtil.readLineToArray(file);
         //System.out.println(fileArray.size());
-        ParseFile.parseTransferConfig(file);
-
-
-
+        HashMap<String, String> a = JsonUtilWithFastjson.getFilterMains(file);
+        System.out.println(a);
     }
+    /*
+    {我下属参与的=4ac97df9cf98465f827d4b257856c1ea,
+    全部产品=e329c679c3ee40ebae734d4fb4491e91,
+    共享给我的=35f5ee43e0ce499a81d1322ae7369f63,
+    我负责的=e7bcac63098f486ba72fb99da694a646, 下
+    架产品=70a19e3797f74011a843a660481323a4,
+    上架产品=c291c4b7dce3468c812ac9039e76f851,
+    我参与的=3ee6d1d4a2204401ab4b76d8e6498374,
+    我下属负责的=98e6fe48db1a41a5a260896a85064c25,
+    我负责部门的=16431eee4b834cc488a1073551105b2b}
+     */
+
+//    @Test(description = "测试将txt按行放入arrayList")
+//    public void readTxt(){
+//        String file = "/data/transferConfig.txt";
+//        //ArrayList fileArray = TxtFileUtil.readLineToArray(file);
+//        //System.out.println(fileArray.size());
+//        ParseFile.parseTransferConfig(file);
+//    }
 //    @Test(description = "getAllProperties")
 //    public void getAllProperties(){
 //        System.out.println("=========start test:getAllProperties=================");
