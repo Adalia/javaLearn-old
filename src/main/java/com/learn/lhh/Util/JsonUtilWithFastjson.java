@@ -35,4 +35,18 @@ public class JsonUtilWithFastjson {
         return filterMains;
 
     }
+    public static JSONObject getJsonObjFromFile(String file){
+        InputStream in = ClassLoader.class.getResourceAsStream(file);
+        String text = "";
+        try {
+            text = IOUtils.toString(in, "utf8");
+        }catch (IOException e){
+            System.out.println(e);
+        }
+        text = text.replaceAll("(\r\n|\r|\n|\n\r)", "");
+        System.out.println("json文件字符串"+text);
+        JSONObject result = JSONObject.parseObject(text);
+        return result;
+    }
+
 }
