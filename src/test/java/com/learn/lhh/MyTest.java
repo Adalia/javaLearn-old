@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import com.learn.lhh.Util.PropertiesUtil;
 import com.learn.lhh.Util.ExcelUtilWithXSSF;
@@ -41,36 +42,17 @@ public class MyTest {
 
     @Test(description = "测试将txt按行放入arrayList")
     public void compareOldAndNew(){
-        String value = ParseFile.getObjValue("ContactObj","YearOfBirth");
-        System.out.println("==========="+value);//year_of_birth
+        //String value = ParseFile.getObjValue("ContactObj","YearOfBirth");
+       // System.out.println("==========="+value);//year_of_birth
         String oldRes = "/data/oldInterface.json";
         String newRes =  "/data/newInterface.json";
         JSONArray oldDataList = JsonUtilWithFastjson.getJsonObjFromFile(oldRes).getJSONObject("Value").getJSONArray("ContactInfos");
         JSONArray newDataList = JsonUtilWithFastjson.getJsonObjFromFile(newRes).getJSONObject("Value").getJSONArray("dataList");
         //调用比较方法——待实现
-        //System.out.println(oldDataList);
-        if(oldDataList.size()==newDataList.size()){
-            HashMap<String,Map> oldDataMap = new HashMap<String, Map>();
-            HashMap<String,Map> newDataMap = new HashMap<String, Map>();
-            for(int i=0;i<oldDataList.size();i++){
-                Map oneData = (Map)oldDataList.get(i);
-                String okey = (String)oneData.get("ContactID");
-                oldDataMap.put(okey,oneData);
-               // System.out.println("============="+aaa);
-            }
-            String newkey = ParseFile.getObjValue("ContactObj","ContactID");//enable_partner_view
-            System.out.println("**************"+newkey);
-            for(int i=0;i<newDataList.size();i++){
-                Map oneData = (Map)newDataList.get(i);
-                String nkey = (String) oneData.get("_id");
-                newDataMap.put(nkey,oneData);
-                //System.out.println("---------------"+aaa);
+        //System.out.println(oldDataList)
+        Map result = CompareOldAndNew.compare("ContactObj",oldDataList,newDataList);
+        System.out.println(result);
 
-            }
-            System.out.println(oldDataMap);
-            System.out.println(newDataMap);
-
-        }
 
     }
 
