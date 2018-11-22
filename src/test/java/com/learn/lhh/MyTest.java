@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.testng.annotations.Test;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 import com.learn.lhh.Util.PropertiesUtil;
 import com.learn.lhh.Util.ExcelUtilWithXSSF;
@@ -49,9 +46,14 @@ public class MyTest {
         JSONArray oldDataList = JsonUtilWithFastjson.getJsonObjFromFile(oldRes).getJSONObject("Value").getJSONArray("ContactInfos");
         JSONArray newDataList = JsonUtilWithFastjson.getJsonObjFromFile(newRes).getJSONObject("Value").getJSONArray("dataList");
         //调用比较方法——待实现
-        //System.out.println(oldDataList)
+        System.out.println(oldDataList);
         Map result = CompareOldAndNew.compare("ContactObj",oldDataList,newDataList);
         System.out.println(result);
+//        List list = new ArrayList();
+//        list.add("1001");
+//        list.add(1);
+//        String aa= CompareOldAndNew.objectToString(list);
+//        System.out.println(aa);
 
 
     }

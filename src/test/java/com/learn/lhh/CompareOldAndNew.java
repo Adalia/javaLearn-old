@@ -39,25 +39,23 @@ public class CompareOldAndNew {
         if (oldDataList == null) {
             result.put("error", "true");
             result.put("msg", "旧接口返回的数据为0，无需比较！");
-            result.put("result",findDiff);
+            result.put("diff",findDiff);
             return result;
         }
         if (newDataList == null) {
             result.put("error", "true");
             result.put("msg", "新接口返回的数据为0，无需比较！");
-            result.put("result",findDiff);
+            result.put("diff",findDiff);
             return result;
         }
         if (!(oldDataList.size() == newDataList.size())||!newDataIds.containsAll(oldDataIds)) {
             result.put("error", "true");
             result.put("msg", "两个接口的返回的数据不相同！");
-            result.put("result",findDiff);
+            result.put("diff",findDiff);
             return result;
         }
 
         Iterator ite1 = bothDataIds.iterator();
-
-
         //比较两个接口所有数据的各字段值
         int count = 1;
         while(ite1.hasNext()){//每条数据遍历
@@ -73,30 +71,60 @@ public class CompareOldAndNew {
                 while (f1.hasNext()) {//开始比较
                     String fieldname = (String) f1.next();
                     System.out.println("开始比较的字段为:" + fieldname);
-                    if (!fieldname.equals("UDFieldDatas")) {
+                    if (!(fieldname.equals("UDFieldDatas")||fieldname.equals("RecordType"))) {//忽略掉的字段
                         System.out.println("filed的值old：" + fieldname);
                         String newkey = ParseFile.getObjValue(object, fieldname);
                         System.out.println("filed的值new：" + fieldname);
+                        String oldValue = objectToString(oldData.get(fieldname));
                         if (newkey != null) {
                             System.out.println("oldValue=" + oldData.get(fieldname));
                             System.out.println("newValue=" + newData.get(newkey));
-                            if (oldData.get(fieldname) != null && newData.get(newkey) != null) {
-                                if (!oldData.get(fieldname).equals(newData.get(newkey))) {
+
+
+                            String newValue = objectToString(newData.get(newkey));
+                            System.out.println("oldValue(String)=" + oldValue);
+                            System.out.println("newValue(String)=" + newValue);
+                            if((oldValue != null && newValue == null)||(oldValue == null && newValue != null)){
+                                result.put("error", "true");
+                                result.put("msg", "1相同数据出现了不同的值:" + fieldname);
+                                result.put("diff",findDiff);
+                                System.out.println("result1"+result);
+                                return result;
+                            }
+
+                            if (oldValue != null && newValue != null) {
+                                if (!oldValue.equals(newValue)) {
                                     result.put("error", "true");
-                                    result.put("msg", "1相同数据出现了不同的值:" + fieldname);
+                                    result.put("msg", "2相同数据出现了不同的值:" + fieldname);
+                                    result.put("diff",findDiff);
+                                    System.out.println("result1"+result);
                                     return result;
                                 }
-                            }
+                           }
                         } else {
                             System.out.println("oldValue=" + oldData.get(fieldname));
                             System.out.println("newValue=" + newData.get(fieldname));
-                            if (oldData.get(fieldname) != null && newData.get(newkey) != null) {
-                                if (!oldData.get(fieldname).equals(newData.get(fieldname))) {
+
+                            String newValue = objectToString(newData.get(fieldname));
+                            System.out.println("oldValue(String)=" + oldValue);
+                            System.out.println("newValue(String)=" + newValue);
+                            if((oldValue != null && newValue == null)||(oldValue == null && newValue != null)){
+                                result.put("error", "true");
+                                result.put("msg", "3相同数据出现了不同的值:" + fieldname);
+                                result.put("diff",findDiff);
+                                System.out.println("result1"+result);
+                                return result;
+                            }
+                            if (oldValue != null && newValue != null) {
+                                if (!oldValue.equals(newValue)) {
                                     result.put("error", "true");
-                                    result.put("msg", "2相同数据出现了不同的值:" + fieldname);
+                                    result.put("msg", "4相同数据出现了不同的值:" + fieldname);
+                                    result.put("diff", findDiff);
+                                    System.out.println("result2" + result);
                                     return result;
                                 }
                             }
+
                         }
 
                     }
@@ -106,6 +134,54 @@ public class CompareOldAndNew {
 
         return result;
     }
+    /**
+     * 判断两个object是否相等
+     * @param param
+     * return true：相等，false：不相等
+     */
+    public static String objectToString(Object param){
+
+        if (param instanceof Integer) {
+             String value = ((Integer) param).toString();
+            return value;
+        }
+        if (param instanceof String) {
+            String value = (String)param;
+            return value;
+        }
+        if (param instanceof Double) {
+            String value = ((Double) param).toString();
+            return value;
+        }
+        if (param instanceof Float) {
+            String value = ((Float) param).toString();
+            return value;
+        }
+        if (param instanceof Long) {
+            String value = ((Long) param).toString();
+            return value;
+        }
+        if (param instanceof Boolean) {
+            String  value = ((Boolean) param).toString();
+            return value;
+        }
+        if (param instanceof Date) {
+            String value = ((Date) param).toString();
+            return value;
+        }
+        if ((param instanceof List) ){//|| param instanceof ArrayList) {
+            List  list = ((List) param);
+            StringBuilder value = new StringBuilder();
+            for(int i=0;i<list.size();i++){
+                value.append(list.get(i));
+            }
+            return value.toString();
+        }
+
+        return null;
+
+    }
+
     /**
      * 获取两个集合不同
      * @param rps1  rps1数据
