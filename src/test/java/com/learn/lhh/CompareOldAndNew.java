@@ -72,7 +72,7 @@ public class CompareOldAndNew {
                 while (f1.hasNext()) {//开始比较
                     String fieldname = (String) f1.next();
                     System.out.println("开始比较的字段为:" + fieldname);
-                    if (!(fieldname.equals("UDFieldDatas")||fieldname.equals("RecordType"))) {//忽略掉的字段
+                    if (!(fieldname.equals("UDFieldDatas"))) {//忽略掉的字段
                         System.out.println("filed的值old：" + fieldname);
                         String newkey = ParseFile.getObjValue(object, fieldname);
                         System.out.println("filed的值new：" + fieldname);
@@ -136,7 +136,7 @@ public class CompareOldAndNew {
         }
 
         result.put("error", "true");
-        result.put("msg", "比较完成有数据中的字段值，在新旧接口中不同！");
+        result.put("msg", "比较完成，有字段值在新旧接口中不同！");
         result.put("diffData",findDiff);
         result.put("diffFiled",diffField);
         return result;
@@ -189,7 +189,7 @@ public class CompareOldAndNew {
             return value.toString();
         }
 
-        return null;
+        return "";
 
     }
 
