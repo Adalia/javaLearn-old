@@ -39,29 +39,30 @@ public class CompareOldAndNew {
         if (oldDataList == null) {
             result.put("error", "true");
             result.put("msg", "旧接口返回的数据为0，无需比较！");
-            result.put("diff",findDiff);
+            result.put("diffData",findDiff);
             return result;
         }
         if (newDataList == null) {
             result.put("error", "true");
             result.put("msg", "新接口返回的数据为0，无需比较！");
-            result.put("diff",findDiff);
+            result.put("diffData",findDiff);
             return result;
         }
         if (!(oldDataList.size() == newDataList.size())||!newDataIds.containsAll(oldDataIds)) {
             result.put("error", "true");
             result.put("msg", "两个接口的返回的数据不相同！");
-            result.put("diff",findDiff);
+            result.put("diffData",findDiff);
             return result;
         }
-
+        HashMap<String,ArrayList<HashMap>> diffField = new HashMap<String, ArrayList<HashMap>>();
         Iterator ite1 = bothDataIds.iterator();
         //比较两个接口所有数据的各字段值
         int count = 1;
         while(ite1.hasNext()){//每条数据遍历
-            System.out.println("开始处理第"+count+"条数据！");
+            ArrayList<HashMap> onedataDiffFields = new ArrayList<HashMap>();
+            System.out.println("************************开始处理第"+count+"条数据！***********************");
             count++;
-            String id = (String)ite1.next();
+            String id = (String)ite1.next();//比较的id
             Map oldData = oldDataMap.get(id);//根据数据id获取数据的详情
             Map newData = newDataMap.get(id);
             if(oldData!=null && newData!=null){
@@ -77,51 +78,45 @@ public class CompareOldAndNew {
                         System.out.println("filed的值new：" + fieldname);
                         String oldValue = objectToString(oldData.get(fieldname));
                         if (newkey != null) {
-                            System.out.println("oldValue=" + oldData.get(fieldname));
-                            System.out.println("newValue=" + newData.get(newkey));
-
-
+                          //  System.out.println("oldValue=" + oldData.get(fieldname));
+                          //  System.out.println("newValue=" + newData.get(newkey));
                             String newValue = objectToString(newData.get(newkey));
-                            System.out.println("oldValue(String)=" + oldValue);
-                            System.out.println("newValue(String)=" + newValue);
+                           // System.out.println("oldValue(String)=" + oldValue);
+                           // System.out.println("newValue(String)=" + newValue);
                             if((oldValue != null && newValue == null)||(oldValue == null && newValue != null)){
-                                result.put("error", "true");
-                                result.put("msg", "1相同数据出现了不同的值:" + fieldname);
-                                result.put("diff",findDiff);
-                                System.out.println("result1"+result);
-                                return result;
+                                HashMap field = new HashMap();
+                                field.put("old_"+fieldname,oldValue);
+                                field.put("new_"+newkey,newValue);
+                                onedataDiffFields.add(field);
                             }
 
                             if (oldValue != null && newValue != null) {
                                 if (!oldValue.equals(newValue)) {
-                                    result.put("error", "true");
-                                    result.put("msg", "2相同数据出现了不同的值:" + fieldname);
-                                    result.put("diff",findDiff);
-                                    System.out.println("result1"+result);
-                                    return result;
+                                    HashMap field = new HashMap();
+                                    field.put("old_"+fieldname,oldValue);
+                                    field.put("new_"+newkey,newValue);
+                                    onedataDiffFields.add(field);
                                 }
                            }
                         } else {
-                            System.out.println("oldValue=" + oldData.get(fieldname));
-                            System.out.println("newValue=" + newData.get(fieldname));
+//                            System.out.println("oldValue=" + oldData.get(fieldname));
+//                            System.out.println("newValue=" + newData.get(fieldname));
 
                             String newValue = objectToString(newData.get(fieldname));
-                            System.out.println("oldValue(String)=" + oldValue);
-                            System.out.println("newValue(String)=" + newValue);
+//                            System.out.println("oldValue(String)=" + oldValue);
+//                            System.out.println("newValue(String)=" + newValue);
                             if((oldValue != null && newValue == null)||(oldValue == null && newValue != null)){
-                                result.put("error", "true");
-                                result.put("msg", "3相同数据出现了不同的值:" + fieldname);
-                                result.put("diff",findDiff);
-                                System.out.println("result1"+result);
-                                return result;
+                                HashMap field = new HashMap();
+                                field.put("old_"+fieldname,oldValue);
+                                field.put("new_"+fieldname,newValue);
+                                onedataDiffFields.add(field);
                             }
                             if (oldValue != null && newValue != null) {
                                 if (!oldValue.equals(newValue)) {
-                                    result.put("error", "true");
-                                    result.put("msg", "4相同数据出现了不同的值:" + fieldname);
-                                    result.put("diff", findDiff);
-                                    System.out.println("result2" + result);
-                                    return result;
+                                    HashMap field = new HashMap();
+                                    field.put("old_"+fieldname,oldValue);
+                                    field.put("new_"+fieldname,newValue);
+                                    onedataDiffFields.add(field);
                                 }
                             }
 
@@ -130,10 +125,26 @@ public class CompareOldAndNew {
                     }
                 }
             }
+            diffField.put(id,onedataDiffFields);
+        }
+        if((diffField.get("0")!=null && diffField.get("2")!=null)&&diffField.size()==0){
+            result.put("error", "false");
+            result.put("msg", "比较完成，新旧接口相同");
+            result.put("diffData",findDiff);
+            result.put("diffFiled",diffField);
+            return result;
         }
 
+        result.put("error", "true");
+        result.put("msg", "比较完成有数据中的字段值，在新旧接口中不同！");
+        result.put("diffData",findDiff);
+        result.put("diffFiled",diffField);
         return result;
+
     }
+//    public static HashMap getFieldMap(String key1,String value1,String key2,String value){
+//
+//    }
     /**
      * 判断两个object是否相等
      * @param param
