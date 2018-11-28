@@ -1,17 +1,17 @@
 package com.learn.lhh;
 
 import com.alibaba.fastjson.JSONArray;
-import java.util.*;
 import com.alibaba.fastjson.JSONObject;
 import com.learn.lhh.Common.ParseFile;
-import com.learn.lhh.Util.JsonUtilWithFastjson;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 
-public class CompareOldAndNew {
-    public static LinkedHashMap<String, Object> compare(String object, JSONArray oldDataList, JSONArray newDataList,JSONObject newDescribe) {
+import java.util.*;
 
-        LinkedHashMap<String, Object> result = new LinkedHashMap<String, Object>();
-        LinkedList<HashMap> compareResult = new LinkedList<HashMap>();
-
+public class CompareOldAndNew_1 {
+   // private  final static Logger logger = Logger.getLogger(CompareOldAndNew_1.class);
+    public static void compare(String object, JSONArray oldDataList, JSONArray newDataList,JSONObject newDescribe) {
+        //logger.error("hhhhhhhhhhhhhhhhhhhahahahah ");
         TreeMap<String, Map> oldDataMap = new TreeMap<String, Map>();
         TreeMap<String, Map> newDataMap = new TreeMap<String, Map>();
         /**将旧接口返回的数据list转换为<数据id,详情>的map **/
@@ -32,16 +32,12 @@ public class CompareOldAndNew {
 
         //找到新旧接口的数据ID的交集，以及旧接口返回新接口没返回的数据，以及新接口返回旧接口没返回的数据id
         Map<String, HashSet<String>> findDiff = new HashMap<String, HashSet<String>>(findListDiff(oldDataIds,newDataIds));
-        LinkedHashMap<String, HashSet<String>> findDiffResult = new LinkedHashMap<String, HashSet<String>>();
-        HashSet oldOnly = new HashSet<String>(findDiff.get("0"));
-        HashSet newOnly = new HashSet<String>(findDiff.get("2"));
-        findDiffResult.put("只在旧接口中存在的数据",findDiff.get("0"));
-        findDiffResult.put("只在新接口中存在的数据",findDiff.get("2"));
-        System.out.println("只在旧接口中存在的数据: "+findDiff.get("0"));
-        System.out.println("只在新接口中存在的数据: "+findDiff.get("2"));
+
+        System.err.println("只在旧接口中存在的数据: "+findDiff.get("0"));
+        System.err.println("只在新接口中存在的数据: "+findDiff.get("2"));
 
         HashSet bothDataIds = new HashSet<String>(findDiff.get("1"));
-        //System.out.println("===*****==="+findDiff);
+        //System.err.println("===*****==="+findDiff);
 
         Iterator ite1 = bothDataIds.iterator();
         //比较两个接口所有数据的各字段值
@@ -50,21 +46,17 @@ public class CompareOldAndNew {
          */
         int count = 1;
         while(ite1.hasNext()){//每条数据遍历
-            System.out.println("************************开始处理第"+count+"条数据！***********************");
+            System.err.println("**************************************开始处理第"+count+"条数据！*********************************************");
             count++;
-            ArrayList<HashMap> onedataDiffFields = new ArrayList<HashMap>();
-            ArrayList<HashMap> onedataNotTransferFields = new ArrayList<HashMap>();
-            LinkedHashMap oneDataComResult = new LinkedHashMap();/**************************/
             String id = (String)ite1.next();/**比较的id**/
             //根据id获取name
             Map oldData = oldDataMap.get(id);//根据数据id获取数据的详情
             Map newData = newDataMap.get(id);
             String dataName = getObjDataNameFromOld(object,oldData);/**此条数据的name**/
-            oneDataComResult.put("数据Name",dataName);
-            oneDataComResult.put("数据id",id);
-            System.out.println("数据Name = "+ dataName);
-            System.out.println("数据id = "+ id);
-            if(oldData!=null && newData!=null){
+
+            System.err.println("数据Name = "+ dataName);
+            System.err.println("数据id = "+ id);
+            if(oldData!=null && newData!=null) {
                 Set dataField = oldData.keySet();//各个字段的apiname
                 Iterator f1 = dataField.iterator();
                 /**
@@ -78,49 +70,57 @@ public class CompareOldAndNew {
 
                     String newkey = ParseFile.getObjValue(object, fieldApiName);
                     String oldValue = objectToString(oldData.get(fieldApiName));
+
                     if (newkey != null) {/**如果在配置文件中找到了newkey,则用newkey查找新的value**/
                         //HashMap diffValue = new HashMap();
+
                         String newValue = objectToString(newData.get(newkey));
-                        if ((oldValue != null && newValue == null) || (oldValue == null && newValue != null)) {
-                            oneFieldComResult.put("字段Name", fieldName);
-                            oneFieldComResult.put("旧接口ApiName", fieldApiName);
-                            oneFieldComResult.put("新接口ApiName", newkey);
-                            oneFieldComResult.put("旧接口的字段值", oldValue);
-                            oneFieldComResult.put("新接口的字段值", newValue);
+
+                        if ((oldValue != "" && newValue == "") || (oldValue == "" && newValue != "")) {
+                            System.err.println("-------------------------------------------------------");
+
+                            System.err.println("#字段Name = " + fieldName);
+                            System.err.println("#旧接口ApiName = " + fieldApiName);
+                            System.err.println("#新接口ApiName = " + newkey);
+                            System.err.println("##旧接口的字段值 = " + oldValue);
+                            System.err.println("##新接口的字段值 = " + newValue);
                         }
-                        if (oldValue != null && newValue != null) {
+                        if (oldValue != "" && newValue != "") {
                             if (!oldValue.equals(newValue)) {
-                                oneFieldComResult.put("字段Name", fieldName);
-                                oneFieldComResult.put("旧接口ApiName", fieldApiName);
-                                oneFieldComResult.put("新接口ApiName", newkey);
-                                oneFieldComResult.put("旧接口的字段值", oldValue);
-                                oneFieldComResult.put("新接口的字段值", newValue);
+                                System.err.println("-------------------------------------------------------");
+
+                                System.err.println("@字段Name = " + fieldName);
+                                System.err.println("@旧接口ApiName = " + fieldApiName);
+                                System.err.println("@新接口ApiName = " + newkey);
+                                System.err.println("@旧接口的字段值 = " + oldValue);
+                                System.err.println("@新接口的字段值 = " + newValue);
+                            }else{
+
                             }
                         }
-                        if(oneFieldComResult.size()!=0) {
-                            onedataDiffFields.add(oneFieldComResult);
-                        }
+                        System.err.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                        System.err.println("+字段Name = " + fieldName);
+                        System.err.println("+旧接口ApiName = " + fieldApiName);
+                        System.err.println("+新接口ApiName = " + newkey);
+                        System.err.println("+旧接口的字段值 = " + oldValue);
+                        System.err.println("+新接口的字段值 = " + newValue);
+//                        if(oldValue != "" && newValue != ""){
+//                            System.err.println("*新旧接口的值都为null");
+//                        }
                     } else {
-                        notTransferApiName.put("字段Name", fieldName);
-                        notTransferApiName.put("旧接口ApiName", fieldApiName);
-                        notTransferApiName.put("新接口的ApiName", newkey);
-                        notTransferApiName.put("msg", "在配置文件中没有找到该key的对应值");
+                        System.err.println("-------------------------------------------------------");
+                        System.err.println("*字段Name = " + fieldName);
+                        System.err.println("*旧接口ApiName = " + fieldApiName);
+                        System.err.println("*新接口的ApiName: 在配置文件中没有找到该key的对应值");
+                        System.err.println("*旧接口的字段值 = " + oldValue);
+
                         /**需要对没找到的key进行特殊处理，方法待思考**/
-                        onedataNotTransferFields.add(notTransferApiName);
                     }
 
                 }
             }
-            oneDataComResult.put("Value不同的字段Map",onedataDiffFields);
-            oneDataComResult.put("未找到转换关系的字段Map",onedataNotTransferFields);
-
-            compareResult.add(oneDataComResult);
-           // diffField.put(id,onedataDiffFields);
+            System.err.println("*******************************************************");
         }
-        result.put("数据量比较",findDiffResult);
-        result.put("字段比较结果",compareResult);
-        return result;
-
     }
 //    public static HashMap getFieldMap(String key1,String value1,String key2,String value){
 //
@@ -133,7 +133,7 @@ public class CompareOldAndNew {
     public static String objectToString(Object param){
 
         if (param instanceof Integer) {
-             String value = ((Integer) param).toString();
+            String value = ((Integer) param).toString();
             return value;
         }
         if (param instanceof String) {
@@ -220,7 +220,7 @@ public class CompareOldAndNew {
     }
     public static String getFiledNameFromNew(String object,JSONObject newDescribe,String fieldApiName){
         String newkey = ParseFile.getObjValue(object,fieldApiName);
-        //System.out.println(newDescribe);
+        //System.err.println(newDescribe);
         Map describe = newDescribe.getJSONObject(newkey);
         if(newkey!=null && describe!=null) {
             String newName = objectToString(describe.get("label"));

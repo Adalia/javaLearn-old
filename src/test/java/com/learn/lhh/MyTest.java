@@ -2,6 +2,7 @@ package com.learn.lhh;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.sun.org.apache.regexp.internal.RE;
 import org.testng.annotations.Test;
 import java.io.IOException;
 import java.util.*;
@@ -45,15 +46,20 @@ public class MyTest {
         String newRes =  "/data/newInterface.json";
         JSONArray oldDataList = JsonUtilWithFastjson.getJsonObjFromFile(oldRes).getJSONObject("Value").getJSONArray("ContactInfos");
         JSONArray newDataList = JsonUtilWithFastjson.getJsonObjFromFile(newRes).getJSONObject("Value").getJSONArray("dataList");
+        JSONObject newDescribe = JsonUtilWithFastjson.getJsonObjFromFile(newRes).getJSONObject("Value").getJSONObject("objectDescribe").getJSONObject("fields");
         //调用比较方法——待实现
-        System.out.println(oldDataList);
-        Map result = CompareOldAndNew.compare("ContactObj",oldDataList,newDataList);
-        System.out.println(result);
-//        List list = new ArrayList();
-//        list.add("1001");
-//        list.add(1);
-//        String aa= CompareOldAndNew.objectToString(list);
-//        System.out.println(aa);
+//        System.out.println(oldDataList);
+//        LinkedHashMap<String, Object> result = CompareOldAndNew.compare("ContactObj",oldDataList,newDataList,newDescribe);
+//        for(String key : result.keySet()){
+//            System.out.println(key);
+//            Object innerResult = result.get(key);
+//            if(innerResult instanceof LinkedHashMap){
+//                LinkedHashMap diff = new LinkedHashMap(innerResult);
+//                for(String i : )
+//            }
+//
+//        }
+        CompareOldAndNew_1.compare("ContactObj",oldDataList,newDataList,newDescribe);
 
 
     }

@@ -3,6 +3,7 @@ import com.learn.lhh.Util.TxtFileUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 public class ParseFile {
     public static HashMap<String,HashMap<String, String>> convertRelationList = new HashMap<String,HashMap<String, String>> ();
@@ -45,7 +46,17 @@ public class ParseFile {
         }
         return convertRelationList;
     }
+    //在配置文件中寻找自定义对象接口中的key
     public static String getObjValue(String obj,String oldName){
+        LinkedList system = new LinkedList();
+        system.add("");
+        system.add("");
+        system.add("");
+        if(system.contains(oldName)){
+            if(oldName.equals("OwnerName")){
+
+            }
+        }
         parseTransferConfig(file);
         HashMap<String, String> allObjValue = convertRelationList.get(obj);
         String objvalue = allObjValue.get(oldName);
