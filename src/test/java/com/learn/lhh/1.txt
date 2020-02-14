@@ -1,2 +1,6 @@
 test1
+pppppp<<<<<<< HEAD
 mmmmm
+=======
+pppppp
+>>>>>>> test
