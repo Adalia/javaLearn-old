@@ -1,4 +1,7 @@
 package com.learn.lhh.codinglearn.innerclasses;
 
-public class Selector {
+interface Selector {
+    boolean end();
+    Object current();
+    void next();
 }
